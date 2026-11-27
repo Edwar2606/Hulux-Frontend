@@ -1,6 +1,8 @@
 <script setup>
 import { ref } from 'vue'
 
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5133'
+
 const pantalla = ref('inicio')
 
 const nombre = ref('')
@@ -19,126 +21,98 @@ const loginContraseña = ref('')
 const saldo = ref(0)
 const clientId = ref(0)
 
-const registrarCliente = async () =>
-{
-  const respuesta = await fetch('http://localhost:5133/clients',
-  {
+const registrarCliente = async () => {
+  const respuesta = await fetch(`${API_URL}/clients`, {
     method: 'POST',
-    headers:
-    {
+    headers: {
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({
-    Nombre_Cliente: nombre.value,
-    Documento: documento.value,
-    Contraseña: contraseña.value
-})
+      Nombre_Cliente: nombre.value,
+      Documento: documento.value,
+      Contraseña: contraseña.value
+    })
   })
 
   const resultado = await respuesta.text()
-
   alert(resultado)
 }
 
-const iniciarSesion = async () =>
-{
-  const respuesta = await fetch(
-    'http://localhost:5133/login',
-    {
-      method: 'POST',
-      headers:
-      {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        Documento: loginDocumento.value,
-        Contraseña: loginContraseña.value
-      })
+const iniciarSesion = async () => {
+  const respuesta = await fetch(`${API_URL}/login`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      Documento: loginDocumento.value,
+      Contraseña: loginContraseña.value
     })
+  })
 
-    const datos = await respuesta.json()
-
-clientId.value = datos.clientId
-nombreUsuario.value = datos.nombre
-saldo.value = datos.saldo
-
-pantalla.value = 'panel'
-
-  if (!respuesta.ok)
-  {
-    alert("Datos incorrectos")
+  if (!respuesta.ok) {
+    alert('Datos incorrectos')
     return
   }
 
-}
-
-const depositar = async () =>
-{
-  const respuesta = await fetch(
-    'http://localhost:5133/deposito',
-    {
-      method: 'POST',
-      headers:
-      {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        ClienteOrigen: clientId.value,
-        Monto: Number(montoDepositar.value)
-      })
-    })
-
   const datos = await respuesta.json()
 
+  clientId.value = datos.clientId
+  nombreUsuario.value = datos.nombre
   saldo.value = datos.saldo
 
+  pantalla.value = 'panel'
+}
+
+const depositar = async () => {
+  const respuesta = await fetch(`${API_URL}/deposito`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      ClienteOrigen: clientId.value,
+      Monto: Number(montoDepositar.value)
+    })
+  })
+
+  const datos = await respuesta.json()
+  saldo.value = datos.saldo
   alert(datos.mensaje)
 }
 
-const retirar = async () =>
-{
-  const respuesta = await fetch(
-    'http://localhost:5133/retiro',
-    {
-      method: 'POST',
-      headers:
-      {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        ClienteOrigen: clientId.value,
-        Monto: Number(montoRetirar.value)
-      })
+const retirar = async () => {
+  const respuesta = await fetch(`${API_URL}/retiro`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      ClienteOrigen: clientId.value,
+      Monto: Number(montoRetirar.value)
     })
+  })
 
   const datos = await respuesta.json()
-
   saldo.value = datos.saldo
-
   alert(datos.mensaje)
 }
 
-const transferir = async () =>
-{
-  const respuesta = await fetch(
-    'http://localhost:5133/transferencia',
-    {
-      method: 'POST',
-      headers:
-      {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        ClienteOrigen: clientId.value,
-        DocumentoDestino: documentoDestino.value,
-        Monto: Number(montoTransferencia.value)
-      })
+const transferir = async () => {
+  const respuesta = await fetch(`${API_URL}/transferencia`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      ClienteOrigen: clientId.value,
+      DocumentoDestino: documentoDestino.value,
+      Monto: Number(montoTransferencia.value)
     })
+  })
 
   const datos = await respuesta.json()
-
   saldo.value = datos.saldo
-
   alert(datos.mensaje)
 }
 </script>
