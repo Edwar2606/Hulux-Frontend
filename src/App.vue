@@ -13,12 +13,22 @@ const documentoDestino = ref('')
 const montoTransferencia = ref('')
 const nombreUsuario = ref('')
 const pantalla = ref('inicio')
+const movimientos = ref([])
 
 const loginDocumento = ref('')
 const loginContraseña = ref('')
 
 const saldo = ref(0)
 const clientId = ref(0)
+
+const formatoPesos = (valor) => {
+  return new Intl.NumberFormat('es-CO', {
+    style: 'currency',
+    currency: 'COP',
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  }).format(valor)
+}
 
 const registrarCliente = async () => {
   const respuesta = await fetch(`${API_URL}/clients`, {
@@ -61,6 +71,8 @@ const iniciarSesion = async () => {
   saldo.value = datos.saldo
 
   pantalla.value = 'panel'
+
+  await cargarMovimientos()
 }
 
 const depositar = async () => {
@@ -78,6 +90,10 @@ const depositar = async () => {
   const datos = await respuesta.json()
   saldo.value = datos.saldo
   alert(datos.mensaje)
+  pantalla.value = 'panel'
+
+  await cargarMovimientos()
+  montoDepositar.value = ''
 }
 
 const retirar = async () => {
@@ -95,6 +111,10 @@ const retirar = async () => {
   const datos = await respuesta.json()
   saldo.value = datos.saldo
   alert(datos.mensaje)
+  pantalla.value = 'panel'
+
+  await cargarMovimientos()
+  montoRetirar.value = ''
 }
 
 const transferir = async () => {
@@ -113,7 +133,24 @@ const transferir = async () => {
   const datos = await respuesta.json()
   saldo.value = datos.saldo
   alert(datos.mensaje)
+  pantalla.value = 'panel'
+
+  await cargarMovimientos()
+  documentoDestino.value = ''
+  montoTransferencia.value = ''
 }
+
+const cargarMovimientos = async () => {
+
+  const respuesta = await fetch(
+    `${API_URL}/transacciones/${clientId.value}`
+  )
+
+  if (!respuesta.ok) return
+
+  movimientos.value = await respuesta.json()
+}
+
 </script>
 
 <template>
@@ -249,8 +286,36 @@ const transferir = async () => {
   </h2>
 
   <div class="saldo">
-    $ {{ saldo }}
+    {{ formatoPesos(saldo) }}
   </div>
+
+  <div class="movimientos">
+
+  <h2>
+    Últimos movimientos
+  </h2>
+
+  <div
+    v-for="(movimiento,index) in movimientos"
+    :key="index"
+    class="movimiento"
+  >
+
+    <strong>
+      {{ movimiento.tipo }}
+    </strong>
+
+    <br>
+
+    {{ formatoPesos(movimiento.monto) }}
+
+    <br>
+
+    {{ movimiento.descripcion }}
+
+  </div>
+
+</div>
 
   <button
     class="boton"
@@ -283,7 +348,7 @@ const transferir = async () => {
     <div class="lado-saldo">
       <h2>Saldo Actual</h2>
       <div class="saldo">
-        $ {{ saldo }}
+        {{ formatoPesos(saldo) }}
       </div>
     </div>
 
@@ -323,7 +388,7 @@ const transferir = async () => {
     <div class="lado-saldo">
       <h2>Saldo Actual</h2>
       <div class="saldo">
-        $ {{ saldo }}
+        {{ formatoPesos(saldo) }}
       </div>
     </div>
 
@@ -363,7 +428,7 @@ const transferir = async () => {
     <div class="lado-saldo">
       <h2>Saldo Actual</h2>
       <div class="saldo">
-        $ {{ saldo }}
+        {{ formatoPesos(saldo) }}
       </div>
     </div>
 
@@ -479,10 +544,11 @@ h1,h2{
   display:flex;
   flex-direction:column;
   gap:15px;
+  align-items:center;
 }
 
 .btn-volver{
-  background:#555;
+  background:#000000;
   color:white;
   border:none;
   padding:12px;
@@ -492,6 +558,23 @@ h1,h2{
 
 .btn-volver:hover{
   background:#777;
+}
+
+.movimientos{
+  width:500px;
+  max-height:300px;
+  overflow-y:auto;
+  background:#1a1a1a;
+  border-radius:15px;
+  padding:20px;
+}
+
+.movimiento{
+  background:#222;
+  color:white;
+  padding:12px;
+  margin-bottom:10px;
+  border-radius:10px;
 }
 
 </style>
