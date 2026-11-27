@@ -244,10 +244,10 @@ const transferir = async () => {
     class="contenedor"
   >
 
-    <h1>Panel Bancario</h1>
+    <h1>Hulux Bank</h1>
 
     <h2>
-  Bienvenido {{ nombreUsuario }}
+  Bienvenid@ {{ nombreUsuario }}
     </h2>
 
     <h2>
