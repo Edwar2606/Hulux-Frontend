@@ -255,7 +255,26 @@ const transferir = async () => {
   <button
     class="boton"
     @click="pantalla='deposito'"
-  ><div
+  >
+    Depositar
+  </button>
+
+  <button
+    class="boton"
+    @click="pantalla='retiro'"
+  >
+    Retirar
+  </button>
+
+  <button
+    class="boton"
+    @click="pantalla='transferencia'"
+  >
+    Transferir
+  </button>
+</div>
+
+<div
   v-if="pantalla === 'deposito'"
   class="contenedor"
 >
@@ -294,13 +313,8 @@ const transferir = async () => {
 
   </div>
 </div>
-    Depositar
-  </button>
 
-  <button
-    class="boton"
-    @click="pantalla='retiro'"
-  ><div
+<div
   v-if="pantalla === 'retiro'"
   class="contenedor"
 >
@@ -339,13 +353,8 @@ const transferir = async () => {
 
   </div>
 </div>
-    Retirar
-  </button>
 
-  <button
-    class="boton"
-    @click="pantalla='transferencia'"
-  ><div
+<div
   v-if="pantalla === 'transferencia'"
   class="contenedor"
 >
@@ -389,13 +398,8 @@ const transferir = async () => {
 
   </div>
 </div>
-    Transferir
-  </button>
-</div>
 
 </template>
-
-
 
 <style scoped>
 
