@@ -3,8 +3,6 @@ import { ref } from 'vue'
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5133'
 
-const pantalla = ref('inicio')
-
 const nombre = ref('')
 const documento = ref('')
 const contraseña = ref('')
@@ -14,6 +12,7 @@ const montoRetirar = ref('')
 const documentoDestino = ref('')
 const montoTransferencia = ref('')
 const nombreUsuario = ref('')
+const pantalla = ref('inicio')
 
 const loginDocumento = ref('')
 const loginContraseña = ref('')
@@ -239,77 +238,160 @@ const transferir = async () => {
 
   <!-- PANEL BANCARIO -->
 
-  <div
-    v-if="pantalla === 'panel'"
-    class="contenedor"
-  >
+<div
+  v-if="pantalla === 'panel'"
+  class="contenedor"
+>
+  <h1>Hulux Bank</h1>
 
-    <h1>Hulux Bank</h1>
+  <h2>
+    Hola, {{ nombreUsuario }}
+  </h2>
 
-    <h2>
-  Bienvenid@ {{ nombreUsuario }}
-    </h2>
+  <div class="saldo">
+    $ {{ saldo }}
+  </div>
 
-    <h2>
-      Saldo Actual
-    </h2>
+  <button
+    class="boton"
+    @click="pantalla='deposito'"
+  ><div
+  v-if="pantalla === 'deposito'"
+  class="contenedor"
+>
+  <div class="panel-operacion">
 
-    <div class="saldo">
-      $ {{ saldo }}
+    <div class="lado-saldo">
+      <h2>Saldo Actual</h2>
+      <div class="saldo">
+        $ {{ saldo }}
+      </div>
     </div>
 
-    <h2>Depositar</h2>
+    <div class="lado-accion">
+      <h2>Depositar</h2>
 
-<input
-  v-model="montoDepositar"
-  type="number"
-  placeholder="Monto a depositar"
-/>
+      <input
+        v-model="montoDepositar"
+        type="number"
+        placeholder="Monto a depositar"
+      />
 
-<button
-  class="boton"
-  @click="depositar"
->
-  Depositar
-</button>
+      <button
+        class="boton"
+        @click="depositar"
+      >
+        Depositar
+      </button>
 
-
-<h2>Retirar</h2>
-
-<input
-  v-model="montoRetirar"
-  type="number"
-  placeholder="Monto a retirar"
-/>
-
-<button
-  class="boton"
-  @click="retirar"
->
-  Retirar
-</button>
-
-<h2>Transferir</h2>
-
-<input
-  v-model="documentoDestino"
-  placeholder="Documento destino"
-/>
-
-<input
-  v-model="montoTransferencia"
-  type="number"
-  placeholder="Monto a transferir"
-/>
-
-<button
-  class="boton"
-  @click="transferir"
->
-  Transferir
-</button>
+      <button
+        class="btn-volver"
+        @click="pantalla='panel'"
+      >
+        Volver al Panel
+      </button>
+    </div>
 
   </div>
+</div>
+    Depositar
+  </button>
+
+  <button
+    class="boton"
+    @click="pantalla='retiro'"
+  ><div
+  v-if="pantalla === 'retiro'"
+  class="contenedor"
+>
+  <div class="panel-operacion">
+
+    <div class="lado-saldo">
+      <h2>Saldo Actual</h2>
+      <div class="saldo">
+        $ {{ saldo }}
+      </div>
+    </div>
+
+    <div class="lado-accion">
+      <h2>Retirar</h2>
+
+      <input
+        v-model="montoRetirar"
+        type="number"
+        placeholder="Monto a retirar"
+      />
+
+      <button
+        class="boton"
+        @click="retirar"
+      >
+        Retirar
+      </button>
+
+      <button
+        class="btn-volver"
+        @click="pantalla='panel'"
+      >
+        Volver al Panel
+      </button>
+    </div>
+
+  </div>
+</div>
+    Retirar
+  </button>
+
+  <button
+    class="boton"
+    @click="pantalla='transferencia'"
+  ><div
+  v-if="pantalla === 'transferencia'"
+  class="contenedor"
+>
+  <div class="panel-operacion">
+
+    <div class="lado-saldo">
+      <h2>Saldo Actual</h2>
+      <div class="saldo">
+        $ {{ saldo }}
+      </div>
+    </div>
+
+    <div class="lado-accion">
+      <h2>Transferencia</h2>
+
+      <input
+        v-model="documentoDestino"
+        placeholder="Documento destino"
+      />
+
+      <input
+        v-model="montoTransferencia"
+        type="number"
+        placeholder="Monto a transferir"
+      />
+
+      <button
+        class="boton"
+        @click="transferir"
+      >
+        Transferir
+      </button>
+
+      <button
+        class="btn-volver"
+        @click="pantalla='panel'"
+      >
+        Volver al Panel
+      </button>
+    </div>
+
+  </div>
+</div>
+    Transferir
+  </button>
+</div>
 
 </template>
 
@@ -368,6 +450,44 @@ input{
 
 h1,h2{
   color:white;
+}
+
+.panel-operacion{
+  display:flex;
+  width:100%;
+  max-width:1000px;
+  gap:40px;
+}
+
+.lado-saldo{
+  flex:1;
+  background:#1a1a1a;
+  padding:30px;
+  border-radius:15px;
+  text-align:center;
+}
+
+.lado-accion{
+  flex:1;
+  background:#222;
+  padding:30px;
+  border-radius:15px;
+  display:flex;
+  flex-direction:column;
+  gap:15px;
+}
+
+.btn-volver{
+  background:#555;
+  color:white;
+  border:none;
+  padding:12px;
+  border-radius:10px;
+  cursor:pointer;
+}
+
+.btn-volver:hover{
+  background:#777;
 }
 
 </style>
