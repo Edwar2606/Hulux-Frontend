@@ -149,6 +149,8 @@ const cargarMovimientos = async () => {
   if (!respuesta.ok) return
 
   movimientos.value = await respuesta.json()
+
+  console.log(movimientos.value)
 }
 
 </script>
@@ -284,6 +286,10 @@ const cargarMovimientos = async () => {
   <h2>
     Hola, {{ nombreUsuario }}
   </h2>
+
+  <p style="color:white">
+  Cliente ID: {{ clientId }}
+  </p>
 
   <div class="saldo">
     {{ formatoPesos(saldo) }}
